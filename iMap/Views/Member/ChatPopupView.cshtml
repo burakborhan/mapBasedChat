@@ -39,9 +39,7 @@
         </ul>
         <div class="profile">
             <div class="d-flex align-items-center flex-grow-1">
-                @*<span class="avatar me-2 text-uppercase" data-bind="visible: !showAvatar(), text: myProfile()?.fullName()[0]"></span>
-                <img class="avatar me-2" data-bind="visible: showAvatar(), attr: { src: showAvatar() ? '/avatars/' + myProfile()?.avatar() : '' }" />*@
-                <a asp-area="Identity" asp-page="/Account/Manage/Index">@User.Identity?.Name</a>
+                <span asp-area="Identity" asp-page="/Account/Manage/Index">@User.Identity?.Name</span>
             </div>
             
         </div>
@@ -67,8 +65,7 @@
             <ul class="list-unstyled" id="messages-list" data-bind="foreach: chatMessages">
                 <li>
                     <div class="message-item" data-bind="css: { ismine: isMine() === true }">
-                        @*<span class="avatar avatar-lg mx-2 text-uppercase" data-bind="visible: avatar() == null, text: fromFullName()[0]"></span>
-                        <img class="avatar avatar-lg mx-2" data-bind="visible: avatar() != null, attr: { src: avatar() != null ? '/avatars/' + avatar() : '' }" />*@
+                       
                         <div class="message-content">
                             <div class="message-info d-flex flex-wrap align-items-center">
                                 <span class="author" data-bind="text: fromUserName"></span>
@@ -76,7 +73,6 @@
                             </div>
                             <div class="content" data-bind="html: content"></div>
                         </div>
-                        <div class="actions d-none">
                             <div class="dropdown dropstart">
                                 <a class="text-secondary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
@@ -87,7 +83,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div>
+                        @*</div>*@
                     </div>
                 </li>
             </ul>
@@ -141,11 +137,9 @@
         <ul class="list-unstyled flex-grow-1" id="users-list" data-bind="foreach: filteredChatUsers">
             <li data-bind="attr: { 'data-username': userName }">
                 <div class="user">
-                    @*<span class="avatar me-2 text-uppercase" data-bind="visible: avatar() == null, text: fullName()[0]"></span>
-                    <img class="avatar me-2" data-bind="visible: avatar() != null, attr: { src: avatar() != null ? '/avatars/' + avatar() : '' }" />*@
+                    
                     <div class="user-info">
                         <span class="name" data-bind="text: userName"></span>
-                        <span class="device" data-bind="text: device"></span>
                     </div>
                 </div>
             </li>

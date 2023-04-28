@@ -28,12 +28,13 @@ namespace iMap.Controllers
         }
         
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(double latitude, double longitude)
         {
 
             AppUser user = CurrentUser;
             UserViewModel userViewModel = user.Adapt<UserViewModel>();
 
+            var myLocation = new MyLocation();
 
             return View(userViewModel);
         }

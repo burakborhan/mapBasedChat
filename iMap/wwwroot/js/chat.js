@@ -11,18 +11,18 @@
 
     connection.on("newMessage", function (messageView) {
         var isMine = messageView.fromUserName === viewModel.myProfile().userName();
-        var message = new ChatMessage(messageView.id, messageView.content, messageView.timestamp, messageView.fromUserName, messageView.fromFullName, isMine/*, messageView.avatar*/);
+        var message = new ChatMessage(messageView.id, messageView.content, messageView.timestamp, messageView.fromUserName, isMine);
         viewModel.chatMessages.push(message);
         $(".messages-container").animate({ scrollTop: $(".messages-container")[0].scrollHeight }, 1000);
     });
 
     connection.on("getProfileInfo", function (user) {
-        viewModel.myProfile(new ProfileInfo(user.userName, user.fullName/*, user.avatar*/));
+        viewModel.myProfile(new ProfileInfo(user.userName));
         viewModel.isLoading(false);
     });
 
     connection.on("addUser", function (user) {
-        viewModel.userAdded(new ChatUser(user.userName, user.fullName/*, user.avatar*/, user.currentRoom, user.device));
+        viewModel.userAdded(new ChatUser(user.userName, user.currentRoom, user.device));
     });
 
     connection.on("removeUser", function (user) {
@@ -72,9 +72,6 @@
         self.myProfile = ko.observable();
         self.isLoading = ko.observable(true);
 
-        //self.showAvatar = ko.computed(function () {
-        //    return self.isLoading() == false && self.myProfile().avatar() != null;
-        //});
 
         self.showRoomActions = ko.computed(function () {
             return self.joinedRoom()?.admin() == self.myProfile()?.userName();
@@ -92,8 +89,8 @@
                 return self.chatUsers();
             } else {
                 return ko.utils.arrayFilter(self.chatUsers(), function (user) {
-                    var fullName = user.fullName().toLowerCase();
-                    return fullName.includes(self.filter().toLowerCase());
+                    var userName = user.userName().toLowerCase();
+                    return userName.includes(self.filter().toLowerCase());
                 });
             }
         });
@@ -155,8 +152,7 @@
                 self.chatUsers.removeAll();
                 for (var i = 0; i < result.length; i++) {
                     self.chatUsers.push(new ChatUser(result[i].userName,
-                        result[i].fullName,
-                        /*result[i].avatar,*/
+                        result[i].userName,
                         result[i].currentRoom,
                         result[i].device))
                 }
@@ -211,9 +207,7 @@
                             data[i].content,
                             data[i].timestamp,
                             data[i].fromUserName,
-                            data[i].fromFullName,
-                            isMine
-                            /*data[i].avatar*/))
+                            isMine ))
                     }
 
                     $(".messages-container").animate({ scrollTop: $(".messages-container")[0].scrollHeight }, 1000);
@@ -292,16 +286,14 @@
         self.admin = ko.observable(admin);
     }
 
-    function ChatUser(userName, fullName/*, avatar*/, currentRoom, device) {
+    function ChatUser(userName, currentRoom, device) {
         var self = this;
         self.userName = ko.observable(userName);
-        self.fullName = ko.observable(fullName);
-        /*self.avatar = ko.observable(avatar);*/
         self.currentRoom = ko.observable(currentRoom);
         self.device = ko.observable(device);
     }
 
-    function ChatMessage(id, content, timestamp, fromUserName, fromFullName, isMine/*, avatar*/) {
+    function ChatMessage(id, content, timestamp, fromUserName, isMine) {
         var self = this;
         self.id = ko.observable(id);
         self.content = ko.observable(content);
@@ -329,16 +321,13 @@
             return fullDateTime;
         });
         self.fromUserName = ko.observable(fromUserName);
-        self.fromFullName = ko.observable(fromFullName);
         self.isMine = ko.observable(isMine);
-        /*self.avatar = ko.observable(avatar);*/
+        
     }
 
-    function ProfileInfo(userName, fullName/*, avatar*/) {
+    function ProfileInfo(userName) {
         var self = this;
         self.userName = ko.observable(userName);
-        self.fullName = ko.observable(fullName);
-        /*self.avatar = ko.observable(avatar);*/
     }
 
     function formatDate(date) {

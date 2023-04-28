@@ -12,6 +12,7 @@ namespace iMap.Data
         public DbSet<Room>? Rooms { get; set; }
         public DbSet<Message>? Messages { get; set; }
         public DbSet<AppUser>? AppUsers { get; set; }
+        public DbSet<MyLocation>? Locations { get; set; }
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options)
         {
 

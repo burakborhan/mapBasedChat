@@ -41,8 +41,6 @@ namespace iMap.Hubs
                     {
                         Content = Regex.Replace(message, @"<.*?>", string.Empty),
                         FromUserName = sender.UserName,
-                        FromFullName = sender.FullName,
-                        //Avatar = sender.Avatar,
                         Room = "",
                         Timestamp = DateTime.Now
                     };

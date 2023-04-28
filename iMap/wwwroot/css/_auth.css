@@ -39,13 +39,6 @@
         margin: 0.5rem 0;
     }
 
-.profile-avatar {
-    display: block;
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    margin: auto;
-}
 
 .validation-summary-errors ul {
     list-style: none;

@@ -1,5 +1,5 @@
 ﻿
-using FreeGeoIPCore.Models;
+using System.Device.Location;
 using iMap.Data;
 using iMap.Helper;
 using iMap.Models;
@@ -16,11 +16,11 @@ namespace iMap.Controllers
     public class HomeController : BaseController
     {
 
-        
 
-        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,RoleManager<AppRole> roleManager, AppIdentityDbContext context) : base(userManager, signInManager,roleManager,context)
+
+        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, AppIdentityDbContext context) : base(userManager, signInManager, roleManager, context)
         {
-            
+
         }
         public IActionResult Login(string ReturnUrl)
         {
@@ -107,7 +107,7 @@ namespace iMap.Controllers
 
             if (ModelState.IsValid)
             {
-                if(userManager.Users.Any(u=> u.PhoneNumber == userViewModel.PhoneNumber))
+                if (userManager.Users.Any(u => u.PhoneNumber == userViewModel.PhoneNumber))
                 {
                     ModelState.AddModelError("", "This phone number is registered");
                     return View(userViewModel);
@@ -235,7 +235,7 @@ namespace iMap.Controllers
             return View();
         }
 
-        
+
         public IActionResult FacebookLogin(string ReturnUrl)
         {
             string? RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl });
@@ -252,7 +252,7 @@ namespace iMap.Controllers
 
             return new ChallengeResult("Google", properties);
         }
-        
+
         public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
         {
             ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync(ReturnUrl);
@@ -318,15 +318,31 @@ namespace iMap.Controllers
         //public async Task<IActionResult> SaveLocation(double latitude, double longitude)
         //{
         //    // Create a new location entity and add it to the database
-        //    MyLocation location = new MyLocation{ Latitude = latitude, Longitude = longitude };
+        //    MyLocation location = new MyLocation { Latitude = latitude, Longitude = longitude };
 
-        //    await context.myLocations.AddAsync(location);
+        //    await context.Locations.AddAsync(location);
         //    await context.SaveChangesAsync();
-
+        //123
         //    // Return the location data to the client-side
         //    return Json(new { latitude = location.Latitude, longitude = location.Longitude });
         //}
+        [HttpPost]
+        public async Task<IActionResult> GetLocation(MyLocation location)
+        {
+            GeoCoordinate geoCoordinate = new GeoCoordinate(location.Latitude, location.Longitude);
 
+            MyLocation myLocation = new MyLocation
+            {
+                UserId = location.UserId,
+                Latitude = location.Latitude,
+                Longitude = location.Longitude
+            };
+
+            context.Locations.Add(myLocation);
+            await context.SaveChangesAsync();
+
+            return Json(new { latitude = myLocation.Latitude, longitude = myLocation.Longitude });
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
